@@ -1,15 +1,11 @@
 # Gatekeeper
 Gatekeeper is the simple whitelisting and MOTD system for Bungeecord networks.
 
-Requirements
----------------
-To build Gatekeeper, the following will need to be installed and available on your system:
+If you found a bug or are looking for support, add me to my discord or contact me on Twitter:
+Discord: Enough#7502
+Twitter: Enoughsdv
 
-* [JDK 8](http://www.oracle.com/technetwork/java/javase/downloads/jdk8-downloads-2133151.html)
-* [Git](https://git-scm.com)
-* [Maven](https://maven.apache.org)
-
-Contact
+Contact the original creator
 ---------------
 - MC-Market: https://www.mc-market.org/members/53967/
 - Discord: ThatKawaiiSam#2882
