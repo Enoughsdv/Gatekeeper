@@ -4,10 +4,9 @@ import io.github.thatkawaiisam.artus.bungee.BungeeListener;
 import io.github.thatkawaiisam.gatekeeper.utils.CC;
 
 import net.md_5.bungee.event.EventHandler;
-import net.md_5.bungee.api.event.LoginEvent;
 import net.md_5.bungee.api.event.ProxyPingEvent;
-
-import java.util.UUID;
+import net.md_5.bungee.api.connection.ProxiedPlayer;
+import net.md_5.bungee.api.event.ServerConnectEvent;
 
 public class WhitelistListener extends BungeeListener<WhitelistModule> {
 
@@ -21,22 +20,27 @@ public class WhitelistListener extends BungeeListener<WhitelistModule> {
     }
 
     @EventHandler
-    public void onProxyJoin(LoginEvent event) {
+    public void onProxyJoin(ServerConnectEvent event) {
         
-        UUID uuid = event.getConnection().getUniqueId();
+        ProxiedPlayer player = event.getPlayer();
         
-        if (this.getModule().getMode() == WhitelistMode.OFF || this.getModule().getWhitelisted().contains(uuid)) {
+        if (this.getModule().getMode() == WhitelistMode.OFF 
+                || this.getModule().getWhitelisted().contains(player.getUUID())
+                || player.hasPermission(this.getModule().getBypassPermission())) {
             return;
         }
 
+        player.disconnect(CC.translate(this.getModule().getKickMessage()));
         event.setCancelled(true);
-        event.setCancelReason(CC.translate(this.getModule().getKickMessage()));
     }
     
     @EventHandler
     public void onPing(ProxyPingEvent event) {
+        if (this.getModule().getMode() == WhitelistMode.OFF) {
+            return;
+        }
         
         event.getResponse().getVersion().setProtocol(2);
-        event.getResponse().getVersion().setName(CC.translate(this.getModule().getConfiguration().getImplementation().getString("Sever-List")));
+        event.getResponse().getVersion().setName(CC.translate(this.getModule().getServerList()));
     }
 }

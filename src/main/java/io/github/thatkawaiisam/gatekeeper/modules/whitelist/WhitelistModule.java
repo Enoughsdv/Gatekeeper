@@ -16,7 +16,7 @@ public class WhitelistModule extends BungeeModule<GatekeeperPlugin> {
 
     private Set<UUID> whitelisted;
     private WhitelistMode mode;
-    private String kickMessage, bypassPermission;
+    private String kickMessage, bypassPermission, serverList;
 
     /**
      * Whitelist Module.
@@ -48,6 +48,7 @@ public class WhitelistModule extends BungeeModule<GatekeeperPlugin> {
         
         this.kickMessage = configuration.getString("Kick-Message");
         this.bypassPermission = configuration.getString("Bypass-Permission");
+        this.serverList = configuration.getString("Sever-List");
         
         // Register Commands
         this.addCommand(new WhitelistCommand(this));
