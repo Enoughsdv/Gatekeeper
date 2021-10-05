@@ -15,4 +15,3 @@ Contact
 - Discord: ThatKawaiiSam#2882
 - Twitter: ThatKawaiiSam
 - Telegram: ThatKawaiiSam
- 
