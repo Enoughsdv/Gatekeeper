@@ -5,9 +5,7 @@ If you found a bug or are looking for support, add me to my discord or contact m
 - Discord: Enough#7502
 - Twitter: Enoughsdv
 
-Contact the original creator
----------------
-- MC-Market: https://www.mc-market.org/members/53967/
+## Contact the original creator
+
 - Discord: ThatKawaiiSam#2882
-- Twitter: ThatKawaiiSam
 - Telegram: ThatKawaiiSam
