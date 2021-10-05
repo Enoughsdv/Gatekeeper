@@ -1,2 +1,11 @@
-Kick-Message: "&b&lKami Network\n\n&fWell this is awkward... we're currently whitelisted!\n\nJoin our discord for more information.\n&bkami.gg/discord"
-Bypass-Permission: "Gatekeeper.Whitelist.Bypass"
+Messages:
+    Notifications:
+        On-Whitelist: "&7[&6Gatekeeper&7] &aNetwork whitelist is now on."
+        On-UnWhitelist: "&7[&6Gatekeeper&7] &cNetwork whitelist is now off."
+        On-AddPlayer: "&7[&6Gatekeeper&7] &aThe player was successfully added to the whitelist"
+        On-RemovePlayer: "&7[&6Gatekeeper&7] &cThe player was successfully removed to the whitelist."
+
+Kick-Message: "&6&lGatekeeper&r\n                           &r\n         &cWe are currently under maintenance!&r\n                           &r\n        Join our discord for more information. &r\n &6discord.gg/gatekeeper"
+
+Bypass-Permission: "gatekeeper.whitelist.bypass"
+Sever-List: "&cWhitelisted"

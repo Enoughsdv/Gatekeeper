@@ -1,30 +1,40 @@
 package io.github.thatkawaiisam.gatekeeper.modules.whitelist;
 
-import co.aikar.commands.annotation.CommandAlias;
-import co.aikar.commands.annotation.CommandPermission;
-import co.aikar.commands.annotation.Subcommand;
-import com.google.gson.JsonElement;
-import com.google.gson.JsonObject;
-import com.google.gson.JsonParser;
-import io.github.thatkawaiisam.plugintemplate.bungee.BungeeModuleCommand;
-import net.md_5.bungee.api.ChatColor;
+import io.github.thatkawaiisam.gatekeeper.utils.CC;
+import io.github.thatkawaiisam.artus.bungee.BungeeCommand;
+
 import net.md_5.bungee.api.CommandSender;
+import net.md_5.bungee.config.Configuration;
 import net.md_5.bungee.api.connection.ProxiedPlayer;
 
+import com.google.gson.JsonObject;
+import com.google.gson.JsonParser;
+import com.google.gson.JsonElement;
+import com.google.gson.JsonSyntaxException;
+
+import co.aikar.commands.annotation.Syntax;
+import co.aikar.commands.annotation.Subcommand;
+import co.aikar.commands.annotation.CommandAlias;
+
+import java.net.URL;
+import java.net.HttpURLConnection;
+
+import java.io.IOException;
 import java.io.BufferedReader;
 import java.io.InputStreamReader;
-import java.net.HttpURLConnection;
-import java.net.URL;
+
 import java.util.UUID;
-import java.util.concurrent.CompletableFuture;
-import java.util.concurrent.ExecutorService;
 import java.util.concurrent.Executors;
+import java.util.concurrent.ExecutorService;
+import java.util.concurrent.CompletableFuture;
 
 @CommandAlias("gatekeeper")
-public class WhitelistCommand extends BungeeModuleCommand<WhitelistModule> {
+public class WhitelistCommand extends BungeeCommand<WhitelistModule> {
 
     private static ExecutorService executorService = Executors.newFixedThreadPool(2);
     private static JsonParser parser = new JsonParser();
+    Configuration config = getModule().getPlugin().getConfig().getImplementation();
+    Configuration moduleConfig = getModule().getConfiguration().getImplementation();
 
     /**
      * Whitelist Commands.
@@ -32,72 +42,114 @@ public class WhitelistCommand extends BungeeModuleCommand<WhitelistModule> {
      * @param module instance.
      */
     public WhitelistCommand(WhitelistModule module) {
-        super(module, module.getPlugin().getHandler("commands"));
+        super(module);
     }
-
+    
+    @Syntax("<state>")
     @Subcommand("whitelist on")
-    @CommandPermission("Gatekeeper.Admin")
     public void whitelistOn(CommandSender sender) {
-        getModule().setMode(WhitelistMode.ON);
-
-        // Send message to staff on network.
-        for (ProxiedPlayer player : getModule().getPlugin().getProxy().getPlayers()) {
-            if (player.hasPermission("Gatekeeper.Admin")) {
-                player.sendMessage(ChatColor.GREEN + "[Gatekeeper] Network whitelist is now on.");
+        
+        if(!sender.hasPermission(this.config.getString("Permissions.Whitelist.modes")) ||
+                !sender.hasPermission(this.config.getString("Permissions.Admin"))) {
+            
+            sender.sendMessage(CC.translate(this.config.getString("No-Permissions")));
+            return;
+        }
+        
+        this.getModule().setMode(WhitelistMode.ON);
+        
+        if(!(sender instanceof ProxiedPlayer)) {
+            sender.sendMessage(CC.translate(this.moduleConfig.getString("Messages.Notifications.On-Whitelist")));
+            return;
+        }
+        
+        for (ProxiedPlayer player : this.getModule().getPlugin().getProxy().getPlayers()) {
+            if (player.hasPermission(this.config.getString("Permissions.Whitelist.modes")) ||
+                    player.hasPermission("Permissions.Admin")) {
+                
+                player.sendMessage(CC.translate(this.moduleConfig.getString("Messages.Notifications.On-Whitelist")));
             }
         }
     }
-
+    
+    @Syntax("<state>")
     @Subcommand("whitelist off")
-    @CommandPermission("Gatekeeper.Admin")
     public void whitelistOff(CommandSender sender) {
-        getModule().setMode(WhitelistMode.OFF);
-
-        // Send message to staff on network.
-        for (ProxiedPlayer player : getModule().getPlugin().getProxy().getPlayers()) {
-            if (player.hasPermission("Gatekeeper.Admin")) {
-                player.sendMessage(ChatColor.RED + "[Gatekeeper] Network whitelist is now off.");
+        
+        if(!sender.hasPermission(this.config.getString("Permissions.Whitelist.modes")) ||
+                !sender.hasPermission(this.config.getString("Permissions.Admin"))) {
+            
+            sender.sendMessage(CC.translate(this.config.getString("No-Permissions")));
+            return;
+        }
+        
+        this.getModule().setMode(WhitelistMode.OFF);
+        
+        if(!(sender instanceof ProxiedPlayer)) {
+            sender.sendMessage(CC.translate(this.moduleConfig.getString("Messages.Notifications.On-UnWhitelist")));
+            return;
+        }
+        
+        for (ProxiedPlayer player : this.getModule().getPlugin().getProxy().getPlayers()) {
+            if (player.hasPermission(this.config.getString("Permissions.Whitelist.modes")) ||
+                    player.hasPermission("Permissions.Admin")) {
+                
+                player.sendMessage(CC.translate(this.moduleConfig.getString("Messages.Notifications.On-UnWhitelist")));
             }
         }
     }
-
+    
+    @Syntax("<player>")
     @Subcommand("whitelist add")
-    @CommandPermission("Gatekeeper.Admin")
     public void whitelistAdd(CommandSender sender, String target) {
         getUUID(target).whenComplete(((uuid, throwable) -> {
             if (uuid == null) {
-                sender.sendMessage(ChatColor.RED + "Unable to find a valid player.");
+                sender.sendMessage(CC.translate("&cUnable to find a valid player."));
                 return;
             }
-            getModule().getWhitelisted().add(uuid);
-
-            // Send message to staff on network.
-            for (ProxiedPlayer player : getModule().getPlugin().getProxy().getPlayers()) {
-                if (player.hasPermission("Gatekeeper.Admin")) {
-                    player.sendMessage(ChatColor.GREEN + "[Gatekeeper] " + target + " has been added to the whitelisted.");
+            
+            this.getModule().getWhitelisted().add(uuid);
+            
+            if(!(sender instanceof ProxiedPlayer)) {
+                sender.sendMessage(CC.translate(this.moduleConfig.getString("Messages.Notifications.On-AddPlayer")));
+                return;
+            }
+            
+            for (ProxiedPlayer player : this.getModule().getPlugin().getProxy().getPlayers()) {
+                if (player.hasPermission(this.config.getString("Permissions.Whitelist.list")) || 
+                        player.hasPermission("Permissions.Admin")) {
+                    
+                    player.sendMessage(CC.translate(this.moduleConfig.getString("Messages.Notifications.On-AddPlayer")));
                 }
             }
         }));
     }
-
+    
+    @Syntax("<player>")
     @Subcommand("whitelist remove")
-    @CommandPermission("Gatekeeper.Admin")
     public void whitelistRemove(CommandSender sender, String target) {
         getUUID(target).whenComplete(((uuid, throwable) -> {
             if (uuid == null) {
-                sender.sendMessage(ChatColor.RED + "Unable to get UUID of whitelisted player.");
+                sender.sendMessage(CC.translate("&cUnable to find a valid player."));
                 return;
             }
-            if (!getModule().getWhitelisted().contains(uuid)) {
-                sender.sendMessage(ChatColor.RED + "Player is not currently whitelisted.");
+            if (!this.getModule().getWhitelisted().contains(uuid)) {
+                sender.sendMessage(CC.translate("&cPlayer is not currently whitelisted."));
                 return;
             }
-            getModule().getWhitelisted().remove(uuid);
+            
+            this.getModule().getWhitelisted().remove(uuid);
+            
+            if(!(sender instanceof ProxiedPlayer)) {
+                sender.sendMessage(CC.translate(this.moduleConfig.getString("Messages.Notifications.On-RemovePlayer")));
+                return;
+            }
 
-            // Send message to staff on network.
-            for (ProxiedPlayer player : getModule().getPlugin().getProxy().getPlayers()) {
-                if (player.hasPermission("Gatekeeper.Admin")) {
-                    player.sendMessage(ChatColor.RED + "[Gatekeeper] " + target + " has been removed to the whitelisted.");
+            for (ProxiedPlayer player : this.getModule().getPlugin().getProxy().getPlayers()) {
+                if (player.hasPermission(this.config.getString("Permissions.Whitelist.list")) || 
+                        player.hasPermission("Permissions.Admin")) {
+                    
+                    player.sendMessage(CC.translate(this.moduleConfig.getString("Messages.Notifications.On-AddPlayer")));
                 }
             }
         }));
@@ -109,8 +161,9 @@ public class WhitelistCommand extends BungeeModuleCommand<WhitelistModule> {
      * @param player to fetch UUID of.
      * @return UUID if player is valid.
      */
+    
     // TODO: Put a this back into my utils.
-    public static CompletableFuture<UUID> getUUID(String player) {
+    private static CompletableFuture<UUID> getUUID(String player) {
         return CompletableFuture.supplyAsync(() -> {
             try {
                 String url = "https://api.ashcon.app/mojang/v2/user/" + player;
@@ -131,12 +184,9 @@ public class WhitelistCommand extends BungeeModuleCommand<WhitelistModule> {
                     return null;
                 }
                 return UUID.fromString(parsedObject.get("uuid").getAsString());
-            } catch (Exception e) {
+            } catch (JsonSyntaxException | IOException e) {
                 return null;
             }
         }, executorService);
     }
-
-
-
 }

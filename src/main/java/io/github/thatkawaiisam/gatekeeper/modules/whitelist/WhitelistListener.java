@@ -1,14 +1,15 @@
 package io.github.thatkawaiisam.gatekeeper.modules.whitelist;
 
-import io.github.thatkawaiisam.gatekeeper.GatekeeperPlugin;
-import io.github.thatkawaiisam.plugintemplate.bungee.BungeeModuleListener;
-import net.md_5.bungee.api.ChatColor;
-import net.md_5.bungee.api.event.LoginEvent;
+import io.github.thatkawaiisam.artus.bungee.BungeeListener;
+import io.github.thatkawaiisam.gatekeeper.utils.CC;
+
 import net.md_5.bungee.event.EventHandler;
+import net.md_5.bungee.api.event.LoginEvent;
+import net.md_5.bungee.api.event.ProxyPingEvent;
 
 import java.util.UUID;
 
-public class WhitelistListener extends BungeeModuleListener<WhitelistModule, GatekeeperPlugin> {
+public class WhitelistListener extends BungeeListener<WhitelistModule> {
 
     /**
      * Whitelist Listener.
@@ -21,14 +22,21 @@ public class WhitelistListener extends BungeeModuleListener<WhitelistModule, Gat
 
     @EventHandler
     public void onProxyJoin(LoginEvent event) {
+        
         UUID uuid = event.getConnection().getUniqueId();
-
-        // TODO: add a bypass permission.
-        if (getModule().getMode() == WhitelistMode.OFF || getModule().getWhitelisted().contains(uuid)) {
+        
+        if (this.getModule().getMode() == WhitelistMode.OFF || this.getModule().getWhitelisted().contains(uuid)) {
             return;
         }
 
         event.setCancelled(true);
-        event.setCancelReason(ChatColor.translateAlternateColorCodes('&', getModule().getKickMessage()));
+        event.setCancelReason(CC.translate(this.getModule().getKickMessage()));
+    }
+    
+    @EventHandler
+    public void onPing(ProxyPingEvent event) {
+        
+        event.getResponse().getVersion().setProtocol(2);
+        event.getResponse().getVersion().setName(CC.translate(this.getModule().getConfiguration().getImplementation().getString("Sever-List")));
     }
 }

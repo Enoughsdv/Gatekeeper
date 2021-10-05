@@ -1,13 +1,12 @@
 package io.github.thatkawaiisam.gatekeeper.modules.reconnect;
 
-import io.github.thatkawaiisam.gatekeeper.GatekeeperPlugin;
-import io.github.thatkawaiisam.plugintemplate.bungee.BungeeModuleListener;
-import net.md_5.bungee.api.config.ServerInfo;
-import net.md_5.bungee.api.connection.ProxiedPlayer;
-import net.md_5.bungee.api.event.ServerKickEvent;
-import net.md_5.bungee.event.EventHandler;
+import io.github.thatkawaiisam.artus.bungee.BungeeListener;
 
-public class ReconnectListener extends BungeeModuleListener<ReconnectModule, GatekeeperPlugin> {
+import net.md_5.bungee.event.EventHandler;
+import net.md_5.bungee.api.config.ServerInfo;
+import net.md_5.bungee.api.event.ServerKickEvent;
+
+public class ReconnectListener extends BungeeListener<ReconnectModule> {
 
     /**
      * Reconnect Listener.
@@ -17,21 +16,25 @@ public class ReconnectListener extends BungeeModuleListener<ReconnectModule, Gat
     public ReconnectListener(ReconnectModule module) {
         super(module);
     }
-
+    
     @EventHandler
     public void onServerKick(ServerKickEvent event) {
-        ProxiedPlayer player = event.getPlayer();
         // TODO: Better handling of closing and banning.
-        if (event.getKickReason().contains("Server closed")) {
+        if (!event.getKickReason().contains("Server closed")) {
+            return;
+        }
+            
+        for(String hubServersList : this.getModule().getConfiguration().getImplementation().getStringList("Hubs")) {
             // TODO: Send them to a pool of lobby servers - connect to redstone.
-            ServerInfo lobbyServer = getModule().getPlugin().getProxy().getServerInfo("Lobby");
+            ServerInfo hubServer = getModule().getPlugin().getProxy().getServerInfo(hubServersList);
 
-            if (event.getKickedFrom() == lobbyServer) {
+            if (event.getKickedFrom() == hubServer) {
                 return;
             }
 
             event.setCancelled(true);
-            event.setCancelServer(lobbyServer);
+            event.setCancelServer(hubServer);
+
         }
     }
 }

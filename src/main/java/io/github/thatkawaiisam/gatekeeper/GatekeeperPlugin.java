@@ -1,32 +1,41 @@
 package io.github.thatkawaiisam.gatekeeper;
 
-import io.github.thatkawaiisam.plugintemplate.bungee.BungeePluginTemplate;
-import io.github.thatkawaiisam.plugintemplate.bungee.handlers.BungeeCommandHandler;
-import io.github.thatkawaiisam.plugintemplate.bungee.handlers.BungeeModuleHandler;
-import io.github.thatkawaiisam.plugintemplate.shared.ConstructorInject;
+import io.github.thatkawaiisam.artus.bungee.BungeePlugin;
+import io.github.thatkawaiisam.filare.BungeeConfiguration;
+import io.github.thatkawaiisam.gatekeeper.modules.motd.MOTDModule;
+import io.github.thatkawaiisam.gatekeeper.modules.reconnect.ReconnectModule;
+import io.github.thatkawaiisam.gatekeeper.modules.whitelist.WhitelistModule;
 
-import java.util.ArrayList;
+import lombok.Getter;
 
-public class GatekeeperPlugin extends BungeePluginTemplate {
-
+@Getter
+public class GatekeeperPlugin extends BungeePlugin {
+    
+    BungeeConfiguration config = new BungeeConfiguration(this, "config", this.getDataFolder().getAbsolutePath());
+    
     @Override
     public void onEnable() {
-        if (getHandlers() == null) {
-            setHandlers(new ArrayList<>());
-            // Commands.
-            getHandlers().add(new BungeeCommandHandler(this, "io.github.gatekeeper.commands"));
-            // Modules.
-            getHandlers().add(new BungeeModuleHandler(
-                    this,
-                    "io.github.thatkawaiisam.gatekeeper.modules",
-                    new ConstructorInject().chain(GatekeeperPlugin.class, this)
-            ));
+        
+        this.config.load();
+        
+        if(this.config.getImplementation().getBoolean("Modules.motd")){
+            this.getModuleFactory().addModule(new MOTDModule(this));
         }
-        enableHandlers();
+        
+        if(this.config.getImplementation().getBoolean("Modules.reconnect")){
+            this.getModuleFactory().addModule(new ReconnectModule(this));
+        }
+        
+        if(this.config.getImplementation().getBoolean("Modules.whitelist")){
+            this.getModuleFactory().addModule(new WhitelistModule(this));
+        }
+        
+        this.getModuleFactory().enableModules();
+        
     }
 
     @Override
     public void onDisable() {
-        disableHandlers();
+        this.getModuleFactory().disableModules();
     }
 }

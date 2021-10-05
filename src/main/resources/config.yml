@@ -1,0 +1,24 @@
+Modules:
+    motd: true
+    whitelist: true
+    reconnect: true
+
+No-Permissions: "&cYou don't have permissions!"
+
+Permissions:
+    Admin: "gatekeeper.admin"
+    MOTD: "gatekeeper.motd"
+    Whitelist:
+        #/whitelist on | /whitelist off
+        modes: "gatekeeper.whitelist.modes" 
+        #Add or remove Players from the list
+        list: "gatekeeper.whitelist.list"
+
+Help-Command:
+    - "&7&m-----------------------------------"
+    - "&6&lGatekeeper Modules"
+    - ""
+    - "&6/gatekeeper motd &7<line1|line2> &8- &7MOTD module help"
+    - "&6/gatekeeper whitelist &7<on|off|add|remove> &8- &7WhiteList module help"
+    - ""
+    - "&7&m-----------------------------------"
