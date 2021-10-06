@@ -1,6 +1,6 @@
 package io.github.thatkawaiisam.gatekeeper.modules.motd;
 
-import io.github.thatkawaiisam.gatekeeper.utils.CC;
+import io.github.thatkawaiisam.gatekeeper.utils.MessageUtil;
 import io.github.thatkawaiisam.artus.bungee.BungeeListener;
 
 import net.md_5.bungee.api.ServerPing;
@@ -23,7 +23,7 @@ public class MOTDListener extends BungeeListener<MOTDModule> {
     public void onMOTD(ProxyPingEvent event) {
         ServerPing pingInfo = event.getResponse();
 
-        pingInfo.setDescriptionComponent(new TextComponent(CC.translate(
+        pingInfo.setDescriptionComponent(new TextComponent(MessageUtil.translate(
                 this.getModule().getLine1() + "\n" + this.getModule().getLine2())));
 
         event.setResponse(pingInfo);

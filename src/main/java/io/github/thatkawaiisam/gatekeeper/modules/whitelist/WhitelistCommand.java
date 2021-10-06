@@ -1,6 +1,6 @@
 package io.github.thatkawaiisam.gatekeeper.modules.whitelist;
 
-import io.github.thatkawaiisam.gatekeeper.utils.CC;
+import io.github.thatkawaiisam.gatekeeper.utils.MessageUtil;
 import io.github.thatkawaiisam.artus.bungee.BungeeCommand;
 
 import net.md_5.bungee.api.CommandSender;
@@ -52,14 +52,14 @@ public class WhitelistCommand extends BungeeCommand<WhitelistModule> {
         if(!sender.hasPermission(this.config.getString("Permissions.Whitelist.modes")) ||
                 !sender.hasPermission(this.config.getString("Permissions.Admin"))) {
 
-            sender.sendMessage(CC.translate(this.config.getString("No-Permissions")));
+            sender.sendMessage(MessageUtil.translate(this.config.getString("No-Permissions")));
             return;
         }
 
         this.getModule().setMode(WhitelistMode.ON);
 
         if(!(sender instanceof ProxiedPlayer)) {
-            sender.sendMessage(CC.translate(this.moduleConfig.getString("Messages.Notifications.On-Whitelist")));
+            sender.sendMessage(MessageUtil.translate(this.moduleConfig.getString("Messages.Notifications.On-Whitelist")));
             return;
         }
 
@@ -67,7 +67,7 @@ public class WhitelistCommand extends BungeeCommand<WhitelistModule> {
             if (player.hasPermission(this.config.getString("Permissions.Whitelist.modes")) ||
                     player.hasPermission(this.config.getString("Permissions.Admin"))) {
 
-                player.sendMessage(CC.translate(this.moduleConfig.getString("Messages.Notifications.On-Whitelist")));
+                player.sendMessage(MessageUtil.translate(this.moduleConfig.getString("Messages.Notifications.On-Whitelist")));
             }
         }
     }
@@ -79,14 +79,14 @@ public class WhitelistCommand extends BungeeCommand<WhitelistModule> {
         if(!sender.hasPermission(this.config.getString("Permissions.Whitelist.modes")) ||
                 !sender.hasPermission(this.config.getString("Permissions.Admin"))) {
 
-            sender.sendMessage(CC.translate(this.config.getString("No-Permissions")));
+            sender.sendMessage(MessageUtil.translate(this.config.getString("No-Permissions")));
             return;
         }
 
         this.getModule().setMode(WhitelistMode.OFF);
 
         if(!(sender instanceof ProxiedPlayer)) {
-            sender.sendMessage(CC.translate(this.moduleConfig.getString("Messages.Notifications.On-UnWhitelist")));
+            sender.sendMessage(MessageUtil.translate(this.moduleConfig.getString("Messages.Notifications.On-UnWhitelist")));
             return;
         }
 
@@ -94,7 +94,7 @@ public class WhitelistCommand extends BungeeCommand<WhitelistModule> {
             if (player.hasPermission(this.config.getString("Permissions.Whitelist.modes")) ||
                     player.hasPermission(this.config.getString("Permissions.Admin"))) {
 
-                player.sendMessage(CC.translate(this.moduleConfig.getString("Messages.Notifications.On-UnWhitelist")));
+                player.sendMessage(MessageUtil.translate(this.moduleConfig.getString("Messages.Notifications.On-UnWhitelist")));
             }
         }
     }
@@ -104,14 +104,14 @@ public class WhitelistCommand extends BungeeCommand<WhitelistModule> {
     public void whitelistAdd(CommandSender sender, String target) {
         getUUID(target).whenComplete(((uuid, throwable) -> {
             if (uuid == null) {
-                sender.sendMessage(CC.translate("&cUnable to find a valid player."));
+                sender.sendMessage(MessageUtil.translate("&cUnable to find a valid player."));
                 return;
             }
 
             this.getModule().getWhitelisted().add(uuid);
 
             if(!(sender instanceof ProxiedPlayer)) {
-                sender.sendMessage(CC.translate(this.moduleConfig.getString("Messages.Notifications.On-AddPlayer")));
+                sender.sendMessage(MessageUtil.translate(this.moduleConfig.getString("Messages.Notifications.On-AddPlayer")));
                 return;
             }
 
@@ -119,7 +119,7 @@ public class WhitelistCommand extends BungeeCommand<WhitelistModule> {
                 if (player.hasPermission(this.config.getString("Permissions.Whitelist.list")) || 
                         player.hasPermission(this.config.getString("Permissions.Admin"))) {
 
-                    player.sendMessage(CC.translate(this.moduleConfig.getString("Messages.Notifications.On-AddPlayer")));
+                    player.sendMessage(MessageUtil.translate(this.moduleConfig.getString("Messages.Notifications.On-AddPlayer")));
                 }
             }
         }));
@@ -130,18 +130,18 @@ public class WhitelistCommand extends BungeeCommand<WhitelistModule> {
     public void whitelistRemove(CommandSender sender, String target) {
         getUUID(target).whenComplete(((uuid, throwable) -> {
             if (uuid == null) {
-                sender.sendMessage(CC.translate("&cUnable to find a valid player."));
+                sender.sendMessage(MessageUtil.translate("&cUnable to find a valid player."));
                 return;
             }
             if (!this.getModule().getWhitelisted().contains(uuid)) {
-                sender.sendMessage(CC.translate("&cPlayer is not currently whitelisted."));
+                sender.sendMessage(MessageUtil.translate("&cPlayer is not currently whitelisted."));
                 return;
             }
 
             this.getModule().getWhitelisted().remove(uuid);
 
             if(!(sender instanceof ProxiedPlayer)) {
-                sender.sendMessage(CC.translate(this.moduleConfig.getString("Messages.Notifications.On-RemovePlayer")));
+                sender.sendMessage(MessageUtil.translate(this.moduleConfig.getString("Messages.Notifications.On-RemovePlayer")));
                 return;
             }
 
@@ -149,7 +149,7 @@ public class WhitelistCommand extends BungeeCommand<WhitelistModule> {
                 if (player.hasPermission(this.config.getString("Permissions.Whitelist.list")) || 
 			  player.hasPermission(this.config.getString("Permissions.Admin"))) {
 
-                    player.sendMessage(CC.translate(this.moduleConfig.getString("Messages.Notifications.On-AddPlayer")));
+                    player.sendMessage(MessageUtil.translate(this.moduleConfig.getString("Messages.Notifications.On-AddPlayer")));
                 }
             }
         }));

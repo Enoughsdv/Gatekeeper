@@ -1,7 +1,7 @@
 package io.github.thatkawaiisam.gatekeeper.modules.whitelist;
 
 import io.github.thatkawaiisam.artus.bungee.BungeeListener;
-import io.github.thatkawaiisam.gatekeeper.utils.CC;
+import io.github.thatkawaiisam.gatekeeper.utils.MessageUtil;
 
 import net.md_5.bungee.event.EventHandler;
 import net.md_5.bungee.api.event.ProxyPingEvent;
@@ -30,7 +30,7 @@ public class WhitelistListener extends BungeeListener<WhitelistModule> {
             return;
         }
 
-        player.disconnect(CC.translate(this.getModule().getKickMessage()));
+        player.disconnect(MessageUtil.translate(this.getModule().getKickMessage()));
         event.setCancelled(true);
     }
 
@@ -41,6 +41,6 @@ public class WhitelistListener extends BungeeListener<WhitelistModule> {
         }
 
         event.getResponse().getVersion().setProtocol(2);
-        event.getResponse().getVersion().setName(CC.translate(this.getModule().getServerList()));
+        event.getResponse().getVersion().setName(MessageUtil.translate(this.getModule().getServerList()));
     }
 }
