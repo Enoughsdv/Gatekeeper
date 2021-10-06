@@ -15,12 +15,6 @@
             <id>bungeecord-repo</id>
             <url>https://oss.sonatype.org/content/repositories/snapshots</url>
         </repository>
-
-        <!-- Aikar Repo -->
-        <repository>
-            <id>aikar</id>
-            <url>https://repo.aikar.co/content/groups/aikar/</url>
-        </repository>
     </repositories>
 
     <dependencies>
@@ -54,7 +48,7 @@
             <groupId>co.aikar</groupId>
             <artifactId>acf-bungee</artifactId>
             <version>0.5.0-SNAPSHOT</version>
-            <scope>provided</scope>
+            <scope>compile</scope>
         </dependency>
         
         <!-- Artus -->
@@ -83,8 +77,8 @@
     </dependencies>
 
     <build>
-        <finalName>Gatekeeper-${project.version}</finalName>
         <defaultGoal>clean install</defaultGoal>
+        <finalName>Gatekeeper-${project.version}</finalName>
 
         <resources>
             <resource>
@@ -106,11 +100,21 @@
             <plugin>
                 <groupId>org.apache.maven.plugins</groupId>
                 <artifactId>maven-shade-plugin</artifactId>
-                <version>3.0.0</version>
-
+                <version>3.1.1</version>
                 <configuration>
                     <createDependencyReducedPom>false</createDependencyReducedPom>
                     <shadedArtifactAttached>false</shadedArtifactAttached>
+                    <dependencyReducedPomLocation>${project.build.directory}/dependency-reduced-pom.xml</dependencyReducedPomLocation>
+                    <relocations>
+                        <relocation>
+                            <pattern>co.aikar.commands</pattern>
+                            <shadedPattern>io.github.thatkawaiisam.utils.commands</shadedPattern>
+                         </relocation>
+                        <relocation>
+                            <pattern>co.aikar.locales</pattern>
+                            <shadedPattern>io.github.thatkawaiisam.utils.locales</shadedPattern>
+                         </relocation>
+                     </relocations>
                 </configuration>
                 <executions>
                     <execution>
