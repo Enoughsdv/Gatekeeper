@@ -21,10 +21,10 @@ public class WhitelistListener extends BungeeListener<WhitelistModule> {
 
     @EventHandler
     public void onProxyJoin(ServerConnectEvent event) {
-        
+
         ProxiedPlayer player = event.getPlayer();
-        
-        if (this.getModule().getMode() == WhitelistMode.OFF 
+
+        if (this.getModule().getMode() == WhitelistMode.OFF
                 || this.getModule().getWhitelisted().contains(player.getUUID())
                 || player.hasPermission(this.getModule().getBypassPermission())) {
             return;
@@ -33,13 +33,13 @@ public class WhitelistListener extends BungeeListener<WhitelistModule> {
         player.disconnect(CC.translate(this.getModule().getKickMessage()));
         event.setCancelled(true);
     }
-    
+
     @EventHandler
     public void onPing(ProxyPingEvent event) {
         if (this.getModule().getMode() == WhitelistMode.OFF) {
             return;
         }
-        
+
         event.getResponse().getVersion().setProtocol(2);
         event.getResponse().getVersion().setName(CC.translate(this.getModule().getServerList()));
     }

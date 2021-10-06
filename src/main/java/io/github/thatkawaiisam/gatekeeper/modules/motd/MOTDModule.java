@@ -12,7 +12,7 @@ import lombok.Setter;
 public class MOTDModule extends BungeeModule<GatekeeperPlugin> {
 
     private String line1, line2;
-    
+
     /**
      * MOTD Module.
      *
@@ -25,10 +25,10 @@ public class MOTDModule extends BungeeModule<GatekeeperPlugin> {
 
     @Override
     public void onEnable() {
-        
+
         // Load Values
         Configuration configuration = this.getConfiguration().getImplementation();
-        
+
         this.line1 = configuration.getString("Lines.1");
         this.line2 = configuration.getString("Lines.2");
 

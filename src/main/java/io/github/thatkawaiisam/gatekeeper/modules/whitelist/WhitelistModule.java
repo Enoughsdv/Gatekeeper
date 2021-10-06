@@ -35,21 +35,21 @@ public class WhitelistModule extends BungeeModule<GatekeeperPlugin> {
 
         // Load values from configuration
         Configuration configuration = this.getConfiguration().getImplementation();
-        
+
         if (configuration.contains("Whitelisted")) {
             for (String entry : configuration.getStringList("Whitelisted")) {
                 this.whitelisted.add(UUID.fromString(entry));
             }
         }
-        
+
         if (configuration.contains("Status")) {
             this.mode = WhitelistMode.valueOf(configuration.getString("Status"));
         }
-        
+
         this.kickMessage = configuration.getString("Kick-Message");
         this.bypassPermission = configuration.getString("Bypass-Permission");
         this.serverList = configuration.getString("Sever-List");
-        
+
         // Register Commands
         this.addCommand(new WhitelistCommand(this));
 
@@ -64,19 +64,19 @@ public class WhitelistModule extends BungeeModule<GatekeeperPlugin> {
         // Save data values to file.
         if (whitelisted.size() > 1) {
             List<String> entries = new ArrayList<>();
-            
+
             for (UUID uuid : whitelisted) {
                 entries.add(uuid.toString());
             }
-            
+
             configuration.set("Whitelisted", entries);
-            
+
             ProxyServer.getInstance().getLogger().info("Saved whitelisted players to configuration file.");
         }
-        
+
         configuration.set("Status", this.mode.name());
         getConfiguration().save();
-        
+
         // Clear list in the event of a reload.
         this.whitelisted.clear();
     }

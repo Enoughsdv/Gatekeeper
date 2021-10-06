@@ -22,10 +22,10 @@ public class MOTDListener extends BungeeListener<MOTDModule> {
     @EventHandler
     public void onMOTD(ProxyPingEvent event) {
         ServerPing pingInfo = event.getResponse();
-        
+
         pingInfo.setDescriptionComponent(new TextComponent(CC.translate(
                 this.getModule().getLine1() + "\n" + this.getModule().getLine2())));
-        
+
         event.setResponse(pingInfo);
     }
 

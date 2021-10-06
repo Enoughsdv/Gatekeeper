@@ -10,28 +10,28 @@ import lombok.Getter;
 
 @Getter
 public class GatekeeperPlugin extends BungeePlugin {
-    
-    BungeeConfiguration config = new BungeeConfiguration(this, "config", this.getDataFolder().getAbsolutePath());
-    
+
+    private final BungeeConfiguration config = new BungeeConfiguration(this, "config", this.getDataFolder().getAbsolutePath());
+
     @Override
     public void onEnable() {
-        
-        this.config.load();
-        
-        if(this.config.getImplementation().getBoolean("Modules.motd")){
+
+        config.load();
+
+        if(config.getImplementation().getBoolean("Modules.motd")){
             this.getModuleFactory().addModule(new MOTDModule(this));
         }
-        
-        if(this.config.getImplementation().getBoolean("Modules.reconnect")){
+
+        if(config.getImplementation().getBoolean("Modules.reconnect")){
             this.getModuleFactory().addModule(new ReconnectModule(this));
         }
-        
-        if(this.config.getImplementation().getBoolean("Modules.whitelist")){
+
+        if(config.getImplementation().getBoolean("Modules.whitelist")){
             this.getModuleFactory().addModule(new WhitelistModule(this));
         }
-        
+
         this.getModuleFactory().enableModules();
-        
+
     }
 
     @Override

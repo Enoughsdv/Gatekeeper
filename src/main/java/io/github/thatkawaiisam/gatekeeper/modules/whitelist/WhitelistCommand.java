@@ -44,61 +44,61 @@ public class WhitelistCommand extends BungeeCommand<WhitelistModule> {
     public WhitelistCommand(WhitelistModule module) {
         super(module);
     }
-    
+
     @Syntax("<state>")
     @Subcommand("whitelist on")
     public void whitelistOn(CommandSender sender) {
-        
+
         if(!sender.hasPermission(this.config.getString("Permissions.Whitelist.modes")) ||
                 !sender.hasPermission(this.config.getString("Permissions.Admin"))) {
-            
+
             sender.sendMessage(CC.translate(this.config.getString("No-Permissions")));
             return;
         }
-        
+
         this.getModule().setMode(WhitelistMode.ON);
-        
+
         if(!(sender instanceof ProxiedPlayer)) {
             sender.sendMessage(CC.translate(this.moduleConfig.getString("Messages.Notifications.On-Whitelist")));
             return;
         }
-        
+
         for (ProxiedPlayer player : this.getModule().getPlugin().getProxy().getPlayers()) {
             if (player.hasPermission(this.config.getString("Permissions.Whitelist.modes")) ||
-                    player.hasPermission("Permissions.Admin")) {
-                
+                    player.hasPermission(this.config.getString("Permissions.Admin"))) {
+
                 player.sendMessage(CC.translate(this.moduleConfig.getString("Messages.Notifications.On-Whitelist")));
             }
         }
     }
-    
+
     @Syntax("<state>")
     @Subcommand("whitelist off")
     public void whitelistOff(CommandSender sender) {
-        
+
         if(!sender.hasPermission(this.config.getString("Permissions.Whitelist.modes")) ||
                 !sender.hasPermission(this.config.getString("Permissions.Admin"))) {
-            
+
             sender.sendMessage(CC.translate(this.config.getString("No-Permissions")));
             return;
         }
-        
+
         this.getModule().setMode(WhitelistMode.OFF);
-        
+
         if(!(sender instanceof ProxiedPlayer)) {
             sender.sendMessage(CC.translate(this.moduleConfig.getString("Messages.Notifications.On-UnWhitelist")));
             return;
         }
-        
+
         for (ProxiedPlayer player : this.getModule().getPlugin().getProxy().getPlayers()) {
             if (player.hasPermission(this.config.getString("Permissions.Whitelist.modes")) ||
-                    player.hasPermission("Permissions.Admin")) {
-                
+                    player.hasPermission(this.config.getString("Permissions.Admin"))) {
+
                 player.sendMessage(CC.translate(this.moduleConfig.getString("Messages.Notifications.On-UnWhitelist")));
             }
         }
     }
-    
+
     @Syntax("<player>")
     @Subcommand("whitelist add")
     public void whitelistAdd(CommandSender sender, String target) {
@@ -107,24 +107,24 @@ public class WhitelistCommand extends BungeeCommand<WhitelistModule> {
                 sender.sendMessage(CC.translate("&cUnable to find a valid player."));
                 return;
             }
-            
+
             this.getModule().getWhitelisted().add(uuid);
-            
+
             if(!(sender instanceof ProxiedPlayer)) {
                 sender.sendMessage(CC.translate(this.moduleConfig.getString("Messages.Notifications.On-AddPlayer")));
                 return;
             }
-            
+
             for (ProxiedPlayer player : this.getModule().getPlugin().getProxy().getPlayers()) {
                 if (player.hasPermission(this.config.getString("Permissions.Whitelist.list")) || 
-                        player.hasPermission("Permissions.Admin")) {
-                    
+                        player.hasPermission(this.config.getString("Permissions.Admin"))) {
+
                     player.sendMessage(CC.translate(this.moduleConfig.getString("Messages.Notifications.On-AddPlayer")));
                 }
             }
         }));
     }
-    
+
     @Syntax("<player>")
     @Subcommand("whitelist remove")
     public void whitelistRemove(CommandSender sender, String target) {
@@ -137,9 +137,9 @@ public class WhitelistCommand extends BungeeCommand<WhitelistModule> {
                 sender.sendMessage(CC.translate("&cPlayer is not currently whitelisted."));
                 return;
             }
-            
+
             this.getModule().getWhitelisted().remove(uuid);
-            
+
             if(!(sender instanceof ProxiedPlayer)) {
                 sender.sendMessage(CC.translate(this.moduleConfig.getString("Messages.Notifications.On-RemovePlayer")));
                 return;
@@ -147,8 +147,8 @@ public class WhitelistCommand extends BungeeCommand<WhitelistModule> {
 
             for (ProxiedPlayer player : this.getModule().getPlugin().getProxy().getPlayers()) {
                 if (player.hasPermission(this.config.getString("Permissions.Whitelist.list")) || 
-                        player.hasPermission("Permissions.Admin")) {
-                    
+			  player.hasPermission(this.config.getString("Permissions.Admin"))) {
+
                     player.sendMessage(CC.translate(this.moduleConfig.getString("Messages.Notifications.On-AddPlayer")));
                 }
             }
@@ -161,7 +161,7 @@ public class WhitelistCommand extends BungeeCommand<WhitelistModule> {
      * @param player to fetch UUID of.
      * @return UUID if player is valid.
      */
-    
+
     // TODO: Put a this back into my utils.
     private static CompletableFuture<UUID> getUUID(String player) {
         return CompletableFuture.supplyAsync(() -> {

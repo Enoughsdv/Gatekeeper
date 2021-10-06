@@ -16,14 +16,14 @@ public class ReconnectListener extends BungeeListener<ReconnectModule> {
     public ReconnectListener(ReconnectModule module) {
         super(module);
     }
-    
+
     @EventHandler
     public void onServerKick(ServerKickEvent event) {
         // TODO: Better handling of closing and banning.
         if (!event.getKickReason().contains("Server closed")) {
             return;
         }
-            
+
         for(String hubServersList : this.getModule().getConfiguration().getImplementation().getStringList("Hubs")) {
             // TODO: Send them to a pool of lobby servers - connect to redstone.
             ServerInfo hubServer = getModule().getPlugin().getProxy().getServerInfo(hubServersList);

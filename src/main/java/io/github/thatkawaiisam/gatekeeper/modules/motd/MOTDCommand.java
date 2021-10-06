@@ -35,7 +35,7 @@ public class MOTDCommand extends BungeeCommand<MOTDModule> {
         this.getModule().setLine1(value);
         sender.sendMessage(CC.translate("&aYou have put line 1 of the MOTD."));
     }
-    
+
     @Syntax("<message>")
     @Subcommand("motd line2")
     public void setLine2(CommandSender sender, String value) {
